@@ -9,12 +9,11 @@ object Bot extends App {
     val bot = new PircBotX
     bot.getListenerManager().addListener(IssueLinker)
     bot.getListenerManager().addListener(Admin)
+    bot.getListenerManager().addListener(Help)
     bot.setName(NAME)
     bot.setAutoNickChange(true)
 
-    println(bot.hasShutdownHook())
-
-    print("Connecting... ")
+    print("[info] Connecting... ")
     bot.connect(SERVER)
     bot.joinChannel(CHANNEL)
     println("ok!")
