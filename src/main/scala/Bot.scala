@@ -3,7 +3,7 @@ import org.pircbotx.PircBotX
 object Bot extends App {
   val NAME = "cgeo-irct"
   val SERVER = "irc.freenode.net"
-  val CHANNEL = "#cgeo"
+  val CHANNEL = "#cgeo-test"
 
   try {
     val bot = new PircBotX
@@ -11,6 +11,8 @@ object Bot extends App {
     bot.getListenerManager().addListener(Admin)
     bot.setName(NAME)
     bot.setAutoNickChange(true)
+
+    println(bot.hasShutdownHook())
 
     print("Connecting... ")
     bot.connect(SERVER)

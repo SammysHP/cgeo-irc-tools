@@ -11,11 +11,10 @@ object Admin extends ListenerAdapter[PircBotX] {
     (event.getMessage().split(" ").toList: @unchecked) match {
       case "admin" :: ADMIN_PW :: command => {
         (command: @unchecked) match {
-          case "disconnect" :: _ => {
-            event.respond("Disconnect and exit")
-            println("INFO: Request disconnect")
-            // event.getBot().disconnect()
-            // System.exit(0)
+          case "shutdown" :: _ => {
+            event.respond("Shutdown bot...")
+            println("[info] Request shutdown")
+            event.getBot().shutdown()
           }
         }
       }
