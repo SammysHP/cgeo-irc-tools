@@ -2,6 +2,8 @@ import org.pircbotx.PircBotX
 import org.pircbotx.hooks.ListenerAdapter
 import org.pircbotx.hooks.events.PrivateMessageEvent
 
+import util.Log
+
 object Admin extends ListenerAdapter[PircBotX] {
   type Message = PrivateMessageEvent[PircBotX]
 
@@ -12,16 +14,18 @@ object Admin extends ListenerAdapter[PircBotX] {
       case "admin" :: password :: command => {
         if (ADMIN_PW != password) {
           event.respond("Wrong password!")
+          Log.i("Failed authentication")
         } else {
           command match {
             case "shutdown" :: _ => {
               event.respond("Shutting down bot...")
-              println("[info] Shutdown requested")
+              Log.w("Shutdown requested, shutting down")
               event.getBot().shutdown()
             }
             case "setpw" :: password :: _ => {
               ADMIN_PW = password
               event.respond("Password set to \"" + password + "\"")
+              Log.w("Password set to \"" + password + "\"")
             }
             case _ => event.respond("Unknown command, try 'help'")
           }

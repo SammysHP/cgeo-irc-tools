@@ -5,6 +5,7 @@ import org.pircbotx.hooks.ListenerAdapter
 import org.pircbotx.hooks.events.MessageEvent
 
 import models._
+import util.Log
 
 object IssueLinker extends ListenerAdapter[PircBotX] {
   type Message = MessageEvent[PircBotX]
@@ -14,7 +15,10 @@ object IssueLinker extends ListenerAdapter[PircBotX] {
   override def onMessage(event: Message) = {
     (issueMatcher findAllIn event.getMessage()).matchData foreach(m => {
       val issueId = m.group(1)
-      Issue.findById(issueId.toInt).map( issue => event.getBot().sendMessage(event.getChannel(), issue.summary) )
+      Issue.findById(issueId.toInt).map( issue => {
+        event.getBot().sendMessage(event.getChannel(), issue.summary)
+        Log.d("Posted issue " + issue.summary)
+      })
     })
   }
 }

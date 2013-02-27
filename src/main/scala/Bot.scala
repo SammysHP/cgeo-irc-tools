@@ -1,9 +1,12 @@
 import org.pircbotx.PircBotX
 
+import util.Log
+
 object Bot extends App {
   val DEFAULT_NAME = "cgeo-irct"
   val DEFAULT_SERVER = "irc.freenode.net"
   val DEFAULT_CHANNEL = "#cgeo"
+  val DEFAULT_LEVEL = 4
 
   def parseOptions(args: List[String], options: Map[String, String]): Map[String, String] = {
     args match {
@@ -11,6 +14,7 @@ object Bot extends App {
       case "-s" :: server :: tail => parseOptions(tail, options + ("server" -> server))
       case "-c" :: channel :: tail => parseOptions(tail, options + ("channel" -> channel))
       case "-n" :: name :: tail => parseOptions(tail, options + ("name" -> name))
+      case "-v" :: level :: tail => parseOptions(tail, options + ("level" -> level))
       case _ :: tail => parseOptions(tail, options)
     }
   }
@@ -18,18 +22,28 @@ object Bot extends App {
   val options = parseOptions(args.toList, Map())
 
   try {
+    Log.logLevel = options.getOrElse("level", DEFAULT_LEVEL).toString.toInt
+
     val bot = new PircBotX
+
+    val server = options.getOrElse("server", DEFAULT_SERVER)
+    val channel = options.getOrElse("channel", DEFAULT_CHANNEL)
+
     bot.getListenerManager().addListener(IssueLinker)
     bot.getListenerManager().addListener(Admin)
     bot.getListenerManager().addListener(Help)
+
     bot.setName(options.getOrElse("name", DEFAULT_NAME))
     bot.setAutoNickChange(true)
 
-    print("[info] Connecting... ")
-    bot.connect(options.getOrElse("server", DEFAULT_SERVER))
-    bot.joinChannel(options.getOrElse("channel", DEFAULT_CHANNEL))
-    println("ok!")
+    Log.i("Connecting to " + server + "…")
+    bot.connect(server)
+    Log.i("Connected")
+
+    Log.i("Joining channel " + channel + "…")
+    bot.joinChannel(channel)
+    Log.i("Joined")
   } catch {
-    case e: Exception => println("ERROR: " + e)
+    case e: Exception => Log.e(e.toString)
   }
 }
