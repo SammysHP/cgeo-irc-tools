@@ -32,6 +32,9 @@ object Bot extends App {
     bot.getListenerManager().addListener(IssueLinker)
     bot.getListenerManager().addListener(Admin)
     bot.getListenerManager().addListener(Help)
+    // We don't use built-in setAutoReconnect() and setAutoReconnectChannels()
+    // because they try immediately to reconnect and only once
+    bot.getListenerManager().addListener(new Reconnector(channel))
 
     bot.setName(options.getOrElse("name", DEFAULT_NAME))
     bot.setAutoNickChange(true)

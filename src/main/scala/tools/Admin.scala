@@ -20,7 +20,8 @@ object Admin extends ListenerAdapter[PircBotX] {
             case "shutdown" :: _ => {
               event.respond("Shutting down bot...")
               Log.w("Shutdown requested, shutting down")
-              event.getBot().shutdown()
+              Reconnector.disconnectIntended = true
+              event.getBot().shutdown(true)
             }
             case "setpw" :: password :: _ => {
               ADMIN_PW = password
