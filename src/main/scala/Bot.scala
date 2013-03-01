@@ -41,6 +41,7 @@ object Bot extends App {
     bot.getListenerManager().addListener(new Reconnector(channel))
 
     bot.setName(options.getOrElse("name", DEFAULT_NAME))
+    bot.setLogin("cgeo-irct")
     bot.setAutoNickChange(true)
 
     Log.i("Connecting to " + server + "…")
