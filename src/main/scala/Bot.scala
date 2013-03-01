@@ -6,7 +6,6 @@ object Bot extends App {
   val DEFAULT_NAME = "cgeo-irct"
   val DEFAULT_SERVER = "irc.freenode.net"
   val DEFAULT_CHANNEL = "#cgeo"
-  val DEFAULT_LOGPATH = "."
   val DEFAULT_LEVEL = 4
 
   def parseOptions(args: List[String], options: Map[String, String]): Map[String, String] = {
@@ -30,12 +29,13 @@ object Bot extends App {
 
     val server = options.getOrElse("server", DEFAULT_SERVER)
     val channel = options.getOrElse("channel", DEFAULT_CHANNEL)
-    val logpath = options.getOrElse("logpath", DEFAULT_LOGPATH)
 
     bot.getListenerManager().addListener(IssueLinker)
     bot.getListenerManager().addListener(Admin)
     bot.getListenerManager().addListener(Help)
-    bot.getListenerManager().addListener(new Logger(logpath))
+    options.get("logpath").foreach (path => {
+      bot.getListenerManager().addListener(new Logger(path))
+    })
     // We don't use built-in setAutoReconnect() and setAutoReconnectChannels()
     // because they try immediately to reconnect and only once
     bot.getListenerManager().addListener(new Reconnector(channel))

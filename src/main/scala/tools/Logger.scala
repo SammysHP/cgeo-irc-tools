@@ -10,6 +10,8 @@ class Logger(path: String) extends ListenerAdapter[PircBotX] {
   val fileDate = new java.text.SimpleDateFormat("yyyy-MM-dd")
   val logDate = new java.text.SimpleDateFormat("HH:mm:ss")
 
+  Log.i("Start logging. Logs are stored in \"" + path + "\"")
+
   override def onMessage(event: MessageEvent[PircBotX]) = {
     logMessage(event.getUser.getNick + ":", event.getMessage)
   }
