@@ -1,6 +1,6 @@
 import org.pircbotx.PircBotX
 import org.pircbotx.hooks.ListenerAdapter
-import org.pircbotx.hooks.events.{ActionEvent, JoinEvent, MessageEvent, PartEvent, QuitEvent}
+import org.pircbotx.hooks.events.{ActionEvent, JoinEvent, MessageEvent, NickChangeEvent, PartEvent, QuitEvent}
 
 import java.io.FileWriter
 import java.util.Date
@@ -29,7 +29,11 @@ class Logger(path: String) extends ListenerAdapter[PircBotX] {
   }
 
   override def onQuit(event: QuitEvent[PircBotX]) = {
-    logMessage("<<<", event.getUser.getNick + " left the channel (quit: " + event.getReason() + ")")
+    logMessage("<<<", event.getUser.getNick + " left the channel (quit: " + event.getReason + ")")
+  }
+
+  override def onNickChange(event: NickChangeEvent[PircBotX]) = {
+    logMessage("***", event.getOldNick + " is now known as " + event.getNewNick)
   }
 
   private def logMessage(user: String, message: String) = {
