@@ -4,7 +4,7 @@ import scala.io.Source
 import scala.util.parsing.json._
 
 case class Issue(id: Int, title: String, url: String, state: String) {
-  def summary: String = "#" + id + " [" + state + "] " + title + " (" + url + ")"
+  def summary: String = "#" + id + " [" + state + "] " + title + " <" + url + ">"
 }
 
 object Issue {
