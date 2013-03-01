@@ -6,7 +6,7 @@ object Bot extends App {
   val DEFAULT_NAME = "cgeo-irct"
   val DEFAULT_SERVER = "irc.freenode.net"
   val DEFAULT_CHANNEL = "#cgeo"
-  val DEFAULT_LEVEL = 4
+  val DEFAULT_LEVEL = 0
 
   def parseOptions(args: List[String], options: Map[String, String]): Map[String, String] = {
     args match {
