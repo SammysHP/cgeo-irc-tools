@@ -29,7 +29,7 @@ class Logger(path: String) extends ListenerAdapter[PircBotX] {
   }
 
   override def onQuit(event: QuitEvent[PircBotX]) = {
-    logMessage("<<<", event.getUser.getNick + " left the channel (quit: " + event.getReason + ")")
+    logMessage("<<<", event.getUser.getNick + " left the channel (" + event.getReason + ")")
   }
 
   override def onNickChange(event: NickChangeEvent[PircBotX]) = {
