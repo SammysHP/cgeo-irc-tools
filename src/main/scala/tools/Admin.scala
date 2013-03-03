@@ -14,7 +14,7 @@ object Admin extends ListenerAdapter[PircBotX] {
       case "admin" :: password :: command => {
         if (ADMIN_PW != password) {
           event.respond("Wrong password!")
-          Log.i("Failed authentication")
+          Log.i("Failed authentication (user: " + event.getUser.getNick + ")")
         } else {
           command match {
             case "shutdown" :: _ => {
