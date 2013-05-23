@@ -8,8 +8,8 @@ case class Issue(id: Int, title: String, url: String, state: String) {
 }
 
 object Issue {
-  val ISSUE_URL = "https://github.com/cgeo/c-geo-opensource/issues/"
-  val API_URL = "https://api.github.com/repos/cgeo/c-geo-opensource/issues/"
+  val ISSUE_URL = "https://github.com/cgeo/cgeo/issues/"
+  val API_URL = "https://api.github.com/repos/cgeo/cgeo/issues/"
 
   def findById(id: Int): Option[Issue] = {
     val apiResponse = Source.fromURL(API_URL + id).mkString
