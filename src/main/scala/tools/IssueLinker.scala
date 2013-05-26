@@ -12,7 +12,9 @@ object IssueLinker extends ListenerAdapter[PircBotX] {
 
   val issueMatcher = """#(\d+)""".r
 
-  override def onMessage(event: Message) = {
+  override def onMessage(event: Message): Unit = {
+    if (event.getUser == "cgeo-ci") return
+
     (issueMatcher findAllIn event.getMessage()).matchData foreach(m => {
       val issueId = m.group(1)
       Issue.findById(issueId.toInt).map( issue => {
