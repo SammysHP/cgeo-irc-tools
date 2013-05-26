@@ -16,6 +16,7 @@ object Bot extends App {
       case "-n" :: name :: tail => parseOptions(tail, options + ("name" -> name))
       case "-v" :: level :: tail => parseOptions(tail, options + ("level" -> level))
       case "-l" :: path :: tail => parseOptions(tail, options + ("logpath" -> path))
+      case "-p" :: password :: tail => { Admin.ADMIN_PW = password; parseOptions(tail, options) }
       case _ :: tail => parseOptions(tail, options)
     }
   }
