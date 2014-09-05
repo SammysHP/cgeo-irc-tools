@@ -48,6 +48,10 @@ case class Logger(logDirectoryPath: String) extends ListenerAdapter[PircBotX] {
     logMessage("<-- " + event.getUser.getNick + " has kicked " + event.getRecipient.getNick + " from " + event.getChannel.getName + " (" + event.getReason + ")")
   }
 
+  override def onNotice(event: NoticeEvent[PircBotX]) = {
+    logMessage("<" + event.getUser.getNick + "> (notice) " + event.getMessage)
+  }
+
   private def logMessage(message: String) = {
     try {
       val file = new FileWriter(logDirectoryPath + "/" + fileDate.format(new Date()) + ".txt", true)
