@@ -1,5 +1,3 @@
-package models
-
 import scala.io.Source
 import scala.util.parsing.json._
 
@@ -8,11 +6,8 @@ case class Issue(id: Int, title: String, url: String, state: String) {
 }
 
 object Issue {
-  val ISSUE_URL = "https://github.com/cgeo/cgeo/issues/"
-  val API_URL = "https://api.github.com/repos/cgeo/cgeo/issues/"
-
-  def findById(id: Int): Option[Issue] = {
-    val apiResponse = Source.fromURL(API_URL + id).mkString
+  def findById(id: Int, apiUrl: String): Option[Issue] = {
+    val apiResponse = Source.fromURL(apiUrl + id).mkString
 
     JSON.parseFull(apiResponse) match {
       case Some(data: Map[String,Any] @unchecked) => Some(Issue(

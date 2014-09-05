@@ -1,0 +1,11 @@
+[irc]
+server = irc.freenode.net
+name = cgeo-irct
+realname = c:geo IRC Bot
+channel = #cgeo
+
+[issuelinker]
+apiurl = https://api.github.com/repos/cgeo/cgeo/issues/
+
+[logger]
+directory = /path/for/logging

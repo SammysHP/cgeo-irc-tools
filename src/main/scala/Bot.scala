@@ -1,55 +1,38 @@
-import org.pircbotx.PircBotX
+import java.io.File
 
-import util.Log
+import org.ini4j.Ini
+import org.pircbotx.{PircBotX, Configuration, Channel}
 
 object Bot extends App {
-  val DEFAULT_NAME = "cgeo-irct"
-  val DEFAULT_SERVER = "irc.freenode.net"
-  val DEFAULT_CHANNEL = "#cgeo"
-  val DEFAULT_LEVEL = 0
+  val configFile = "config.ini"
+  val ini = new Ini(new File(configFile));
 
-  def parseOptions(args: List[String], options: Map[String, String]): Map[String, String] = {
-    args match {
-      case Nil => options
-      case "-s" :: server :: tail => parseOptions(tail, options + ("server" -> server))
-      case "-c" :: channel :: tail => parseOptions(tail, options + ("channel" -> channel))
-      case "-n" :: name :: tail => parseOptions(tail, options + ("name" -> name))
-      case "-v" :: level :: tail => parseOptions(tail, options + ("level" -> level))
-      case "-l" :: path :: tail => parseOptions(tail, options + ("logpath" -> path))
-      case "-p" :: password :: tail => { Admin.ADMIN_PW = password; parseOptions(tail, options) }
-      case _ :: tail => parseOptions(tail, options)
+  val ircConfig = ini.get("irc")
+  val configuration = new Configuration.Builder()
+    .setName(ircConfig.get("name"))
+    .setLogin(ircConfig.get("name"))
+    .setRealName(ircConfig.get("realname"))
+    .setAutoNickChange(true)
+    .setAutoReconnect(true)
+    .setServerHostname(ircConfig.get("server"))
+    .addAutoJoinChannel(ircConfig.get("channel"))
+    .setEncoding(java.nio.charset.Charset.forName("UTF-8"))
+    .buildConfiguration()
+  val bot = new PircBotX(configuration)
+
+  val listenerManager = bot.getConfiguration().getListenerManager()
+  val logger = Logger(ini.get("logger").get("directory"))
+  listenerManager.addListener(IssueLinker(ini.get("issuelinker").get("apiurl"), logger))
+  listenerManager.addListener(logger)
+
+  while (true) {
+    try {
+      bot.startBot()
+    } catch {
+      case e: Throwable => {
+        Thread.sleep(10000)
+        println("Error! Restarting...")
+      }
     }
-  }
-
-  val options = parseOptions(args.toList, Map())
-
-  try {
-    Log.logLevel = options.getOrElse("level", DEFAULT_LEVEL).toString.toInt
-
-    val bot = new PircBotX
-
-    val server = options.getOrElse("server", DEFAULT_SERVER)
-    val channel = options.getOrElse("channel", DEFAULT_CHANNEL)
-
-    bot.getListenerManager().addListener(IssueLinker)
-    bot.getListenerManager().addListener(Admin)
-    bot.getListenerManager().addListener(Help)
-    options.get("logpath").foreach (path => {
-      bot.getListenerManager().addListener(new Logger(path))
-    })
-
-    bot.setName(options.getOrElse("name", DEFAULT_NAME))
-    bot.setLogin("cgeo-irct")
-    bot.setAutoNickChange(true)
-
-    Log.i("Connecting to " + server + "…")
-    bot.connect(server)
-    Log.i("Connected")
-
-    Log.i("Joining channel " + channel + "…")
-    bot.joinChannel(channel)
-    Log.i("Joined")
-  } catch {
-    case e: Exception => Log.e(e.toString)
   }
 }

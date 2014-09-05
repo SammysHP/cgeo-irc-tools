@@ -1,9 +1,7 @@
 import AssemblyKeys._
 
-name := "c-geo IRC tools"
+libraryDependencies += "org.pircbotx" % "pircbotx" % "2.0.1"
 
-version := "0.1"
-
-scalaVersion := "2.10.0"
+libraryDependencies += "org.ini4j" % "ini4j" % "0.5.2"
 
 assemblySettings
